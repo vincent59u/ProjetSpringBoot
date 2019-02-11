@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -48,7 +50,7 @@ public class PersonneRepresentation {
 
     // POST
     @PostMapping
-    public ResponseEntity<?> addPersonne(@RequestBody Personne personne) {
+    public ResponseEntity<?> addPersonne(@RequestBody @Valid Personne personne) {
         personne.setId(UUID.randomUUID().toString());
         Personne saved = pr.save(personne);
         HttpHeaders responseHeader = new HttpHeaders();
@@ -58,7 +60,7 @@ public class PersonneRepresentation {
 
     // PUT
     @PutMapping(value = "/{personneId}")
-    public ResponseEntity<?> updatePersonne(@RequestBody Personne personne,
+    public ResponseEntity<?> updatePersonne(@RequestBody @Valid Personne personne,
                                                @PathVariable("personneId") String personneId) {
         Optional<Personne> body = Optional.ofNullable(personne);
         if (!body.isPresent()) {
