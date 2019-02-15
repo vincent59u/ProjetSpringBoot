@@ -1,17 +1,17 @@
 # OSX
 .DS_Store
 
-# Tache-service
-tache-service/.idea/
-tache-service/*.iml
-tache-service/*.iws
-tache-service/Projet.iml
-tache-service/.DS_Store
+# Taches-service
+taches-service/.idea/
+taches-service/*.iml
+taches-service/*.iws
+taches-service/Projet.iml
+taches-service/.DS_Store
 
-tache-service/log/
-tache-service/target/
+taches-service/log/
+taches-service/target/
 
-tache-service/src/main/resources/*
+taches-service/src/main/resources/*
 
 # Personnes-service
 personnes-service/.idea/
