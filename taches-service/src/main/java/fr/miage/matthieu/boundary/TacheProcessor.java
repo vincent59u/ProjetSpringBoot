@@ -20,11 +20,12 @@ public class TacheProcessor implements ResourceProcessor<Resource<? extends Tach
     @Override
     public Resource<Detail> process(Resource<? extends Tache> resource) {
         Tache tache = resource.getContent();
-        List<Personne> personnes = tache
+        List<Personne> participants = tache
                 .getParticipantsId()
                 .stream()
                 .map(client::get)
                 .collect(Collectors.toList());
-        return new Resource<>(new Detail(tache, personnes), resource.getLinks());
+        Personne responsable = client.get(tache.getResponsable_id());
+        return new Resource<>(new Detail(tache, responsable, participants), resource.getLinks());
     }
 }

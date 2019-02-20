@@ -1,6 +1,8 @@
 package fr.miage.matthieu.boundary;
 
+import fr.miage.matthieu.entity.Detail;
 import fr.miage.matthieu.entity.Tache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
@@ -24,6 +26,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping(value = "/taches", produces = MediaType.APPLICATION_JSON_VALUE)
 @ExposesResourceFor(Tache.class)
 public class TacheRepresentation {
+
+    @Autowired
+    TacheProcessor tacheProcessor;
 
     private final TacheRessource tr;
 
@@ -83,24 +88,26 @@ public class TacheRepresentation {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private Resources<Resource<Tache>> tacheToResource(Iterable<Tache> taches) {
+    private Resources<Resource> tacheToResource(Iterable<Tache> taches) {
         Link selfLink = linkTo(methodOn(TacheRepresentation.class).getAllTaches()).withSelfRel();
         List<Resource<Tache>> tacheRessources = new ArrayList();
         taches.forEach(tache
                 -> tacheRessources.add(tacheToResource(tache, false)));
-        return new Resources<>(tacheRessources, selfLink);
+        return new Resources(tacheRessources, selfLink);
     }
 
-    private Resource<Tache> tacheToResource(Tache tache, Boolean collection) {
+    private Resource tacheToResource(Tache tache, Boolean collection) {
         Link selfLink = linkTo(TacheRepresentation.class)
                 .slash(tache.getId())
                 .withSelfRel();
         if (collection) {
             Link collectionLink = linkTo(methodOn(TacheRepresentation.class).getAllTaches())
                     .withSelfRel();
-            return new Resource<>(tache, selfLink, collectionLink);
+            Resource<? extends Tache> test = new Resource<>(tache, selfLink, collectionLink);
+            return tacheProcessor.process(test);
         } else {
-            return new Resource<>(tache, selfLink);
+            Resource<? extends Tache> test = new Resource<>(tache, selfLink);
+            return tacheProcessor.process(test);
         }
     }
 }
