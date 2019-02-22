@@ -1,6 +1,18 @@
 # OSX
 .DS_Store
 
+# Eureka-service
+eureka-service/.idea/
+eureka-service/*.iml
+eureka-service/*.iws
+eureka-service/Projet.iml
+eureka-service/.DS_Store
+
+eureka-service/log/
+eureka-service/target/
+
+eureka-service/src/main/resources/*
+
 # Taches-service
 taches-service/.idea/
 taches-service/*.iml
