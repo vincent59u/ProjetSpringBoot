@@ -7,6 +7,9 @@ eureka-service/*.iml
 eureka-service/*.iws
 eureka-service/Projet.iml
 eureka-service/.DS_Store
+eureka-service/.classpath
+eureka-service/.project
+eureka-service/.settings/*
 
 eureka-service/log/
 eureka-service/target/
@@ -19,6 +22,9 @@ taches-service/*.iml
 taches-service/*.iws
 taches-service/Projet.iml
 taches-service/.DS_Store
+taches-service/.classpath
+taches-service/.project
+taches-service/.settings/*
 
 taches-service/log/
 taches-service/target/
@@ -31,6 +37,9 @@ personnes-service/*.iml
 personnes-service/*.iws
 personnes-service/Projet.iml
 personnes-service/.DS_Store
+personnes-service/.classpath
+personnes-service/.project
+personnes-service/.settings/*
 
 personnes-service/log/
 personnes-service/target/
