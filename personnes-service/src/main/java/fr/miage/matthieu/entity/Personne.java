@@ -37,6 +37,17 @@ public class Personne implements Serializable {
         // pour JPA ! OBLIGATOIRE !!!
     }
 
+    public Personne(String nom, String prenom, String email, String mdp, Date date_naissance, String commune, Long codepostal)
+    {
+        this.setNom(nom);
+        this.setPrenom(prenom);
+        this.setEmail(email);
+        this.setMdp(mdp);
+        this.setDate_naissance(date_naissance);
+        this.setCommune(commune);
+        this.setCodepostal(codepostal);
+    }
+
     public Personne(String id, String nom, String prenom, String email, String mdp, Date date_naissance, String commune, Long codepostal)
     {
         this.setId(id);
