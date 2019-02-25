@@ -1,6 +1,7 @@
 package fr.miage.matthieu.boundary;
 
-import fr.miage.matthieu.entity.Detail;
+import fr.miage.matthieu.entity.Etat;
+import fr.miage.matthieu.entity.Personne;
 import fr.miage.matthieu.entity.Tache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -14,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -30,6 +28,9 @@ public class TacheRepresentation {
     @Autowired
     TacheProcessor tacheProcessor;
 
+    @Autowired
+    PersonneClient personneClient;
+
     private final TacheRessource tr;
 
     public TacheRepresentation(TacheRessource tr) {
@@ -38,34 +39,130 @@ public class TacheRepresentation {
 
     // GET all
     @GetMapping
-    public ResponseEntity<?> getAllTaches() {
-        Iterable<Tache> allTaches = tr.findAll();
+    public ResponseEntity<?> getAllTaches(@RequestParam(value="etat", required = false) String etat)
+    {
+        Iterable<Tache> allTaches;
+        if(etat == null){
+            allTaches = tr.findAll();
+        }else{
+            try {
+                Etat e = Etat.valueOf(etat);
+                allTaches = tr.findByEtat(e);
+                if (((Collection<?>) allTaches).size() == 0) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+            } catch (IllegalArgumentException e){
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        }
         return new ResponseEntity<>(tacheToResource(allTaches), HttpStatus.OK);
     }
 
     // GET one
     @GetMapping(value = "/{tacheId}")
-    public ResponseEntity<?> getTache(@PathVariable("tacheId") String id) {
+    public ResponseEntity<?> getTache(@PathVariable("tacheId") String id)
+    {
         return Optional.ofNullable(tr.findById(id))
                 .filter(Optional::isPresent)
-                .map(i -> new ResponseEntity<>(tacheToResource(i.get(), true), HttpStatus.OK))
+                .map(i -> new ResponseEntity<>(tacheToResource(i.get(), false), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    //GET responsable d'une tache
+    @GetMapping(value = "{tacheId}/responsable")
+    public ResponseEntity<?> getResponsableFromTache(@PathVariable("tacheId") String id)
+    {
+        Optional<Tache> tacheOptional = tr.findById(id);
+
+        if (!tacheOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(personneClient.get(tacheOptional.get().getResponsable_id()), HttpStatus.OK);
+    }
+
+    // GET all participants d'une tache
+    @GetMapping(value = "{tacheId}/participants")
+    public ResponseEntity<?> getParticipantsFromTache(@PathVariable("tacheId") String id)
+    {
+        Optional<Tache> tacheOptional = tr.findById(id);
+
+        if (!tacheOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Personne> participants = new ArrayList<>();
+        tacheOptional.get().getParticipantsId().forEach(participantId -> participants.add(personneClient.get(participantId)));
+        return new ResponseEntity<>(participants, HttpStatus.OK);
+    }
+
+    // GET un participant d'une tache
+    @GetMapping(value = "{tacheId}/participant/{participantId}")
+    public ResponseEntity<?> getParticipantFromTache(@PathVariable("tacheId") String tacheId,
+                                                     @PathVariable("participantId") String participantId)
+    {
+        Optional<Tache> tacheOptional = tr.findById(tacheId);
+        Personne participant = personneClient.get(participantId);
+
+        if (!tacheOptional.isPresent() || participant == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(participant, HttpStatus.OK);
     }
 
     // POST
     @PostMapping
-    public ResponseEntity<?> addTache(@RequestBody @Valid Tache tache) {
+    public ResponseEntity<?> addTache(@RequestBody @Valid Tache tache)
+    {
         tache.setId(UUID.randomUUID().toString());
+
+        if (tache.getParticipantsId() == null || tache.getParticipantsId().size() == 0){
+            tache.setEtat(Etat.CREEE);
+        }else{
+            tache.setEtat(Etat.EN_COURS);
+        }
+
         Tache saved = tr.save(tache);
         HttpHeaders responseHeader = new HttpHeaders();
         responseHeader.setLocation(linkTo(TacheRepresentation.class).slash(saved.getId()).toUri());
         return new ResponseEntity<>(null, responseHeader, HttpStatus.CREATED);
     }
 
+    //POST participant to tache
+    @PostMapping(value = "/{tacheId}/participant/{participantId}")
+    public ResponseEntity<?> addParticipantToTache(@PathVariable("tacheId") String tache_id,
+                                                   @PathVariable("participantId") String participant_id)
+    {
+        Optional<Tache> tacheOptional = tr.findById(tache_id);
+        Personne participant = personneClient.get(participant_id);
+
+        if (!tacheOptional.isPresent() || participant == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (tacheOptional.get().getEtat() != Etat.ACHEVEE) {
+            if (tacheOptional.get().getParticipantsId().contains(participant_id)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+
+            tacheOptional.get().getParticipantsId().add(participant_id);
+
+            if (tacheOptional.get().getParticipantsId().size() == 1){
+                tacheOptional.get().setEtat(Etat.EN_COURS);
+            }
+            Tache saved = tr.save(tacheOptional.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
     // PUT
     @PutMapping(value = "/{tacheId}")
     public ResponseEntity<?> updateTache(@RequestBody @Valid Tache tache,
-                                            @PathVariable("tacheId") String tacheId) {
+                                            @PathVariable("tacheId") String tacheId)
+    {
         Optional<Tache> body = Optional.ofNullable(tache);
         if (!body.isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -73,35 +170,76 @@ public class TacheRepresentation {
         if (!tr.existsById(tacheId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        tache.setId(tacheId);
-        Tache result = tr.save(tache);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (body.get().getEtat() != Etat.ACHEVEE) {
+            tache.setId(tacheId);
+            Tache result = tr.save(tache);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     // DELETE
     @DeleteMapping(value = "/{tacheId}")
-    public ResponseEntity<?> deleteTache(@PathVariable("tacheId") String id) {
+    public ResponseEntity<?> deleteTache(@PathVariable("tacheId") String id)
+    {
         Optional<Tache> tache = tr.findById(id);
         if (tache.isPresent()) {
-            tr.delete(tache.get());
+            tache.get().setEtat(Etat.ACHEVEE);
+            tr.save(tache.get());
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    private Resources<Resource> tacheToResource(Iterable<Tache> taches) {
-        Link selfLink = linkTo(methodOn(TacheRepresentation.class).getAllTaches()).withSelfRel();
+    // DELETE
+    @DeleteMapping(value = "/{tacheId}/participant/{participantId}")
+    public ResponseEntity<?> deleteParticipantToTache(@PathVariable("tacheId") String id,
+                                                      @PathVariable("participantId") String participant_id)
+    {
+        Optional<Tache> tacheOptional = tr.findById(id);
+        Personne personne = personneClient.get(participant_id);
+
+        if (!tacheOptional.isPresent() || personne == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (tacheOptional.get().getEtat() != Etat.ACHEVEE) {
+            if (!tacheOptional.get().getParticipantsId().contains(participant_id)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+
+            tacheOptional.get().getParticipantsId().remove(participant_id);
+            Tache saved = tr.save(tacheOptional.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private Resources<Resource> tacheToResource(Iterable<Tache> taches)
+    {
+        List<Link> links = new ArrayList<>();
+
+        links.add(linkTo(TacheRepresentation.class).withSelfRel());
+        links.add(linkTo(methodOn(TacheRepresentation.class).getAllTaches("CREEE")).withRel("CREEE"));
+        links.add(linkTo(methodOn(TacheRepresentation.class).getAllTaches("EN_COURS")).withRel("EN_COURS"));
+        links.add(linkTo(methodOn(TacheRepresentation.class).getAllTaches("ACHEVEE")).withRel("ACHEVEE"));
+        links.add(linkTo(methodOn(TacheRepresentation.class).getAllTaches("ARCHIVEE")).withRel("ARCHIVEE"));
+
         List<Resource<Tache>> tacheRessources = new ArrayList();
         taches.forEach(tache
                 -> tacheRessources.add(tacheToResource(tache, false)));
-        return new Resources(tacheRessources, selfLink);
+        return new Resources(tacheRessources, links);
     }
 
-    private Resource tacheToResource(Tache tache, Boolean collection) {
+    private Resource tacheToResource(Tache tache, Boolean collection)
+    {
         Link selfLink = linkTo(TacheRepresentation.class)
                 .slash(tache.getId())
                 .withSelfRel();
         if (collection) {
-            Link collectionLink = linkTo(methodOn(TacheRepresentation.class).getAllTaches())
+            Link collectionLink = linkTo(methodOn(TacheRepresentation.class))
                     .withSelfRel();
             Resource<? extends Tache> test = new Resource<>(tache, selfLink, collectionLink);
             return tacheProcessor.process(test);

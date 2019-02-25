@@ -13,10 +13,10 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 @EnableFeignClients
 @EnableCircuitBreaker
 @EnableBinding(TacheChannel.class)
-public class TacheServiceApplicationTests {
+public class TacheServiceApplication {
 
     public static void main(String[] args)
     {
-        SpringApplication.run(TacheServiceApplicationTests.class, args);
+        SpringApplication.run(TacheServiceApplication.class, args);
     }
 }

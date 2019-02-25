@@ -8,13 +8,14 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@ConsistentDate
+//@ConsistentDate
 public class Tache {
 
     @Id
@@ -29,15 +30,26 @@ public class Tache {
     @ElementCollection @JsonProperty("participants_id")
     private Set<String> participantsId;
 
-    @NotNull @DateTimeFormat(pattern="yyyy-MM-dd") @Future
-    private Date date_debut, date_echeance;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date date_debut;
 
-    @NotNull
+    @DateTimeFormat(pattern="yyyy-MM-dd") @Future
+    private Date date_echeance;
+
     private Etat etat;
 
     Tache()
     {
         // pour JPA ! OBLIGATOIRE !!!
+    }
+
+    public Tache(String nom, String responsable_id, Date date_debut, Date date_echeance)
+    {
+        this.setNom(nom);
+        this.setResponsable_id(responsable_id);
+        this.setDate_debut(date_debut);
+        this.setDate_echeance(date_echeance);
+        this.setEtat(etat);
     }
 
     public Tache(Tache tache)
@@ -46,7 +58,7 @@ public class Tache {
         this.setNom(tache.getNom());
         this.setResponsable_id(tache.getResponsable_id());
         this.setParticipantsId(tache.getParticipantsId());
-        this.setDate_debut(tache.getDate_debut());
+        this.setDate_debut(new Date());
         this.setDate_echeance(tache.getDate_echeance());
         this.setEtat(tache.getEtat());
     }
