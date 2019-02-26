@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 8080
+VOLUME /tmp
+ADD target/personnes-service-1.0-SNAPSHOT.jar personnes-service.jar
+RUN bash -c 'touch /personnes-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/personnes-service.jar"]
