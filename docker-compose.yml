@@ -31,6 +31,7 @@ services:
       ports: 
         - 27017:27017
       volumes:
+        - ./personnes-service/init_mongo_db.js:/docker-entrypoint-initdb.d/init.js
         - db-data-mongodb:/data/db
       container_name: personnes-service-mongodb
     
@@ -55,6 +56,7 @@ services:
       ports:
         - 5432:5432
       volumes:
+        - ./taches-service/init_postgres_db.sql:/docker-entrypoint-initdb.d/init.sql
         - db-data-postgres:/var/lib/postgresql/data
       environment:
         POSTGRES_DB: postgres
