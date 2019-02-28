@@ -45,3 +45,18 @@ personnes-service/log/
 personnes-service/target/
 
 personnes-service/src/main/resources/*
+
+# OAuth-service
+oauth-service/.idea/
+oauth-service/*.iml
+oauth-service/*.iws
+oauth-service/Projet.iml
+oauth-service/.DS_Store
+oauth-service/.classpath
+oauth-service/.project
+oauth-service/.settings/*
+
+oauth-service/log/
+oauth-service/target/
+
+oauth-service/src/main/resources/*
