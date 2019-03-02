@@ -9,6 +9,8 @@ services:
       container_name: eureka-service
       environment:
         eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
   
     personnes-service:
       build: ./personnes-service
@@ -21,6 +23,8 @@ services:
       environment:
         EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
         eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
       container_name: personnes-service
       depends_on:
         - mongodb
@@ -46,6 +50,8 @@ services:
       environment:
         EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
         eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
       container_name: taches-service
       depends_on:
         - pgdb
@@ -63,6 +69,65 @@ services:
         POSTGRES_USER: postgres
         POSTGRES_PASSWRD: motdepasse
       container_name: taches-service-postgres
+    
+    oauth-service:
+      build: ./oauth-service
+      ports:
+        - 9191:9191
+      expose:
+        - "9191"
+      volumes:
+        - /tmp
+      environment:
+        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+        eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
+      container_name: oauth-service
+
+    monitor-service:
+      build: ./monitor-service
+      ports:
+        - 9903:9903
+      expose:
+        - "9903"
+      volumes:
+        - /tmp
+      environment: 
+        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+        eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
+      container_name: monitor-service
+    
+    spring-boot-admin-service:
+      build: ./spring-boot-admin-service
+      ports:
+        - 8762:8762
+      expose:
+        - "8762"
+      volumes:
+        - /tmp
+      environment: 
+        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+        eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+      container_name: spring-boot-admin-service
+
+    zipkin-service:
+      build: ./zipkin-service
+      ports:
+        - 9411:9411
+      expose:
+        - "9411"
+      volumes:
+        - /tmp
+      environment: 
+        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+        eureka.instance.preferIpAddress: 'true'
+        spring.boot.admin.client.prefer-ip: 'true'
+        spring.boot.admin.client.url: 'http://spring-boot-admin-service:8762'
+      container_name: zipkin-service
 
 volumes:
   db-data-postgres:

@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 9411
+VOLUME /tmp
+ADD zipkin.jar zipkin-service.jar
+RUN bash -c 'touch /zipkin-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/zipkin-service.jar"]

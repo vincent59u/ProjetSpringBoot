@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 8762
+VOLUME /tmp
+ADD target/spring-boot-admin-service-1.0-SNAPSHOT.jar spring-boot-admin-service.jar
+RUN bash -c 'touch /spring-boot-admin-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/spring-boot-admin-service.jar"]
