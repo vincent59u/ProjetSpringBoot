@@ -60,3 +60,18 @@ oauth-service/log/
 oauth-service/target/
 
 oauth-service/src/main/resources/*
+
+# Monitor-service
+monitor-service/.idea/
+monitor-service/*.iml
+monitor-service/*.iws
+monitor-service/Projet.iml
+monitor-service/.DS_Store
+monitor-service/.classpath
+monitor-service/.project
+monitor-service/.settings/*
+
+monitor-service/log/
+monitor-service/target/
+
+monitor-service/src/main/resources/*
