@@ -75,3 +75,18 @@ monitor-service/log/
 monitor-service/target/
 
 monitor-service/src/main/resources/*
+
+# Spring-boot-admin-service
+spring-boot-admin-service-service/.idea/
+spring-boot-admin-service-service-service/*.iml
+spring-boot-admin-service-service-service/*.iws
+spring-boot-admin-service-service-service/Projet.iml
+spring-boot-admin-service-service-service/.DS_Store
+spring-boot-admin-service-service-service/.classpath
+spring-boot-admin-service-service-service/.project
+spring-boot-admin-service-service-service/.settings/*
+
+spring-boot-admin-service-service-service/log/
+spring-boot-admin-service-service-service/target/
+
+spring-boot-admin-service-service-service/src/main/resources/*
