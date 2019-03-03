@@ -58,7 +58,7 @@ public class Tache {
         this.setNom(tache.getNom());
         this.setResponsable_id(tache.getResponsable_id());
         this.setParticipantsId(tache.getParticipantsId());
-        this.setDate_debut(new Date());
+        this.setDate_debut(tache.getDate_debut());
         this.setDate_echeance(tache.getDate_echeance());
         this.setEtat(tache.getEtat());
     }
