@@ -61,6 +61,21 @@ oauth-service/target/
 
 oauth-service/src/main/resources/*
 
+# Gateway-service
+gateway-service/.idea/
+gateway-service/*.iml
+gateway-service/*.iws
+gateway-service/Projet.iml
+gateway-service/.DS_Store
+gateway-service/.classpath
+gateway-service/.project
+gateway-service/.settings/*
+
+gateway-service/log/
+gateway-service/target/
+
+gateway-service/src/main/resources/*
+
 # Monitor-service
 monitor-service/.idea/
 monitor-service/*.iml
