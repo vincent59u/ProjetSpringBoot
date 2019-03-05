@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -117,6 +118,22 @@ public class TacheRepresentation {
     {
         tache.setId(UUID.randomUUID().toString());
 
+        Personne resp = personneClient.get(tache.getResponsable_id());
+        if (resp.getNom().equals("indisponible")){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        AtomicBoolean valid = new AtomicBoolean(true);
+        tache.getParticipantsId().forEach(participant_id -> {
+            if (personneClient.get(participant_id).getNom().equals("indisponible")){
+                valid.set(false);
+            }
+        });
+
+        if (!valid.get()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         if (tache.getParticipantsId() == null || tache.getParticipantsId().size() == 0){
             tache.setEtat(Etat.CREEE);
         }else{
@@ -137,7 +154,7 @@ public class TacheRepresentation {
         Optional<Tache> tacheOptional = tr.findById(tache_id);
         Personne participant = personneClient.get(participant_id);
 
-        if (!tacheOptional.isPresent() || participant == null){
+        if (!tacheOptional.isPresent() || participant.getNom().equals("indisponible")){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -170,8 +187,12 @@ public class TacheRepresentation {
         if (!tr.existsById(tacheId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         if (body.get().getEtat() != Etat.ACHEVEE) {
+            Optional<Tache> origine = tr.findById(tacheId);
             tache.setId(tacheId);
+            tache.setResponsable_id(origine.get().getResponsable_id());
+            tache.setParticipantsId(origine.get().getParticipantsId());
             Tache result = tr.save(tache);
             return new ResponseEntity<>(HttpStatus.OK);
         }else{

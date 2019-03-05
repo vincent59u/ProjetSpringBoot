@@ -120,11 +120,11 @@ public class TacheServiceApplicationTests {
     }
 
     /**
-     * Test du POST d'une tache
+     * Test du POST d'une tache avec un id responsable existant
      * @throws Exception
      */
     @Test
-    public void postAPI() throws Exception
+    public void postAPIAvecResponsable() throws Exception
     {
         Tache t1 = new Tache("Tache1", "425e7701-02c6-4de3-9333-a2459eece1c8", new Date(), SDF.parse("2025-01-01"));
 
@@ -141,11 +141,28 @@ public class TacheServiceApplicationTests {
     }
 
     /**
-     * Test du POST d'un participant sur une tache
+     * Test du POST d'une tache avec un id responsable qui n'existe pas
      * @throws Exception
      */
     @Test
-    public void postAPIParticipant() throws Exception
+    public void postAPISansResponsable() throws Exception
+    {
+        Tache t1 = new Tache("Tache1", "id_qui_nexiste_pas", new Date(), SDF.parse("2025-01-01"));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(this.toJsonString(t1), headers);
+
+        ResponseEntity<?> response = restTemplate.postForEntity("/taches", entity, ResponseEntity.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Test du POST d'un participant existant sur une tache
+     * @throws Exception
+     */
+    @Test
+    public void postAPIParticipantExistant() throws Exception
     {
         Tache t1 = new Tache("Tache1", "425e7701-02c6-4de3-9333-a2459eece1c8", new Date(), SDF.parse("2025-01-01"));
         t1.setId(UUID.randomUUID().toString());
@@ -158,6 +175,24 @@ public class TacheServiceApplicationTests {
         resp = restTemplate.getForEntity("/taches/" + t1.getId(), String.class);
         assertThat(resp.getBody().contains("de7f2052-4961-4b4f-938c-3cd12clz9f82"));
         assertThat(resp.getBody().contains("EN_COURS"));
+    }
+
+    /**
+     * Test du POST d'un participant non existant sur une tache
+     * @throws Exception
+     */
+    @Test
+    public void postAPIParticipantNonExistant() throws Exception
+    {
+        Tache t1 = new Tache("Tache1", "425e7701-02c6-4de3-9333-a2459eece1c8", new Date(), SDF.parse("2025-01-01"));
+        t1.setId(UUID.randomUUID().toString());
+        tr.save(t1);
+
+        ResponseEntity<String> resp = restTemplate.getForEntity("/taches/" + t1.getId(), String.class);
+        assertThat(resp.getBody().contains("CREEE"));
+        ResponseEntity<?> response = restTemplate.postForEntity("/taches/" + t1.getId() + "/participant/id_participant_non_existant", null, ResponseEntity.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(!resp.getBody().contains("id_participant_non_existant"));
     }
 
     /**
