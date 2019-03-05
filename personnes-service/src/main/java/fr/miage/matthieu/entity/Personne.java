@@ -8,14 +8,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Date;
 
 @Document(collection = "personnes")
-public class Personne implements Serializable {
+public class Personne {
 
     @Id
-    private String id;
+    private String _id;
 
     @NotNull @Size(min = 2, max = 20)
     private String nom, prenom;
@@ -48,9 +47,9 @@ public class Personne implements Serializable {
         this.setCodepostal(codepostal);
     }
 
-    public Personne(String id, String nom, String prenom, String email, String mdp, Date date_naissance, String commune, Long codepostal)
+    public Personne(String _id, String nom, String prenom, String email, String mdp, Date date_naissance, String commune, Long codepostal)
     {
-        this.setId(id);
+        this.set_id(_id);
         this.setNom(nom);
         this.setPrenom(prenom);
         this.setEmail(email);
@@ -60,12 +59,12 @@ public class Personne implements Serializable {
         this.setCodepostal(codepostal);
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getNom() {

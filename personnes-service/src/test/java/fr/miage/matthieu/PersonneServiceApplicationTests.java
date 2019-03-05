@@ -45,12 +45,12 @@ public class PersonneServiceApplicationTests {
     public void getOneAPI() throws ParseException
     {
         Personne p1 = new Personne("VINCENT", "Matthieu", "matthieu.vincent@gmail.com", "motdepasse", SDF.parse("1995-03-31"), "Rupt-sur-Moselle", 88360L);
-        p1.setId(UUID.randomUUID().toString());
+        p1.set_id(UUID.randomUUID().toString());
         pr.save(p1);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/personnes/" + p1.getId(), String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/personnes/" + p1.get_id(), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().contains(p1.getId()));
+        assertThat(response.getBody().contains(p1.get_id()));
         assertThat(response.getBody().contains("VINCENT"));
         assertThat(response.getBody().contains("Matthieu"));
     }
@@ -60,10 +60,10 @@ public class PersonneServiceApplicationTests {
     public void getAllAPI() throws Exception
     {
         Personne p1 = new Personne("VINCENT", "Matthieu", "matthieu.vincent@gmail.com", "motdepasse", SDF.parse("1995-03-31"), "Rupt-sur-Moselle", 88360L);
-        p1.setId(UUID.randomUUID().toString());
+        p1.set_id(UUID.randomUUID().toString());
         pr.save(p1);
         Personne p2 = new Personne("GASIOROWSKI", "Loic", "loic.gasiorowski@gmail.com", "motdepasse", SDF.parse("1995-07-31"), "Moyeuvre-grande", 57250L);
-        p2.setId(UUID.randomUUID().toString());
+        p2.set_id(UUID.randomUUID().toString());
         pr.save(p2);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/personnes", String.class);
@@ -72,8 +72,8 @@ public class PersonneServiceApplicationTests {
         assertThat(response.getBody().contains("GASIOROWSKI"));
         List<String> liste = JsonPath.read(response.getBody(), "$..personnes..nom");
         assertThat(liste).asList().hasSize(2);
-        assertThat(response.getBody().contains(p1.getId()));
-        assertThat(response.getBody().contains(p2.getId()));
+        assertThat(response.getBody().contains(p1.get_id()));
+        assertThat(response.getBody().contains(p2.get_id()));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class PersonneServiceApplicationTests {
     public void putAPI() throws Exception
     {
         Personne p1 = new Personne("VINCENT", "Matthieu", "matthieu.vincent@gmail.com", "motdepasse", SDF.parse("1995-03-31"), "Rupt-sur-Moselle", 88360L);
-        p1.setId(UUID.randomUUID().toString());
+        p1.set_id(UUID.randomUUID().toString());
         pr.save(p1);
         p1.setCommune("LAXOU");
         p1.setCodepostal(54520L);
@@ -114,9 +114,9 @@ public class PersonneServiceApplicationTests {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(this.toJsonString(p1), headers);
-        restTemplate.put("/personnes/" + p1.getId(), entity);
+        restTemplate.put("/personnes/" + p1.get_id(), entity);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/personnes/" + p1.getId(), String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/personnes/" + p1.get_id(), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().contains(p1.getCommune()));
         String code = JsonPath.read(response.getBody(), "$.codepostal").toString();
@@ -127,11 +127,11 @@ public class PersonneServiceApplicationTests {
     public void deleteAPI() throws Exception
     {
         Personne p1 = new Personne("VINCENT", "Matthieu", "matthieu.vincent@gmail.com", "motdepasse", SDF.parse("1995-03-31"), "Rupt-sur-Moselle", 88360L);
-        p1.setId(UUID.randomUUID().toString());
+        p1.set_id(UUID.randomUUID().toString());
         pr.save(p1);
-        restTemplate.delete("/personnes/" + p1.getId());
+        restTemplate.delete("/personnes/" + p1.get_id());
 
-        ResponseEntity<?> response = restTemplate.getForEntity("/personnes/" + p1.getId(), String.class);
+        ResponseEntity<?> response = restTemplate.getForEntity("/personnes/" + p1.get_id(), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 

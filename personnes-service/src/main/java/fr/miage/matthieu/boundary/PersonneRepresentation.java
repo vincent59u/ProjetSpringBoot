@@ -51,10 +51,10 @@ public class PersonneRepresentation {
     // POST
     @PostMapping
     public ResponseEntity<?> addPersonne(@RequestBody @Valid Personne personne) {
-        personne.setId(UUID.randomUUID().toString());
+        personne.set_id(UUID.randomUUID().toString());
         Personne saved = pr.save(personne);
         HttpHeaders responseHeader = new HttpHeaders();
-        responseHeader.setLocation(linkTo(PersonneRepresentation.class).slash(saved.getId()).toUri());
+        responseHeader.setLocation(linkTo(PersonneRepresentation.class).slash(saved.get_id()).toUri());
         return new ResponseEntity<>(null, responseHeader, HttpStatus.CREATED);
     }
 
@@ -69,7 +69,7 @@ public class PersonneRepresentation {
         if (!pr.existsById(personneId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        personne.setId(personneId);
+        personne.set_id(personneId);
         Personne result = pr.save(personne);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -94,7 +94,7 @@ public class PersonneRepresentation {
 
     private Resource<Personne> personneToResource(Personne personne, Boolean collection) {
         Link selfLink = linkTo(PersonneRepresentation.class)
-                .slash(personne.getId())
+                .slash(personne.get_id())
                 .withSelfRel();
         if (collection) {
             Link collectionLink = linkTo(methodOn(PersonneRepresentation.class).getAllPersonnes())

@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient("http://personnes-service")
+@FeignClient(name = "personnes-service", path = "/personnes")
 public interface PersonneRestClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/personnes/{id}")
-    Personne get(@PathVariable("id") String id);
+    @RequestMapping(method = RequestMethod.GET, value = "/{personneId}")
+    Personne get(@PathVariable("personneId") String id);
 }
