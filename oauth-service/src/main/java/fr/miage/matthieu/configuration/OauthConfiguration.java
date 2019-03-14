@@ -50,8 +50,8 @@ public class OauthConfiguration extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer client) throws Exception{
         client.inMemory()
-                .withClient("matthieu")
-                .secret(passwordEncoder.encode("matthieu"))
+                .withClient("8c3a4ad0-7ad0-4acc-b462-38329eee5c14")
+                .secret(passwordEncoder.encode("72dbb01f-2f80-4381-8232-85b43e49eb2a"))
                 .authorizedGrantTypes("password", "client_credentials","authorization_code", "refresh_token")
                 .scopes("read", "write")
                 //.authorities("ADMIN")
@@ -71,5 +71,4 @@ public class OauthConfiguration extends AuthorizationServerConfigurerAdapter {
     public TokenStore tokenStore(){
         return new JwtTokenStore(accessTokenConverter());
     }
-
 }
