@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
 @EnableHystrixDashboard
-@EnableHystrix
 @Controller
 public class MonitorServiceApplication {
 
