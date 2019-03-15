@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 9191
+VOLUME /tmp
+ADD oauth-service-1.0-SNAPSHOT.jar oauth-service.jar
+RUN bash -c 'touch /oauth-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/oauth-service.jar"]

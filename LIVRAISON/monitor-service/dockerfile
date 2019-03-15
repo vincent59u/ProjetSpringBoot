@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 9903
+VOLUME /tmp
+ADD monitor-service-1.0-SNAPSHOT.jar monitor-service.jar
+RUN bash -c 'touch /monitor-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/monitor-service.jar"]

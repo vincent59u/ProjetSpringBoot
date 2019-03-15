@@ -1,0 +1,6 @@
+FROM openjdk:8
+EXPOSE 8180
+VOLUME /tmp
+ADD taches-service-1.0-SNAPSHOT.jar taches-service.jar
+RUN bash -c 'touch /taches-service.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "/taches-service.jar"]
