@@ -55,6 +55,12 @@ services:
       container_name: taches-service
       depends_on:
         - pgdb
+
+    rabbitmq-service:
+      image: rabbitmq
+      ports:
+        - 5672:5672
+      container_name: rabbitmq-service
     
     pgdb:
       image: postgres
@@ -84,6 +90,19 @@ services:
         spring.boot.admin.client.prefer-ip: 'true'
         spring.boot.admin.client.url: http://spring-boot-admin-service:8762
       container_name: oauth-service
+
+    gateway-service:
+      build: ./gateway-service
+      ports:
+        - 9291:9291
+      expose:
+        - "9291"
+      volumes:
+        - /tmp
+      environment:
+        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+        eureka.instance.preferIpAddress: 'true'
+      container_name: gateway-service
 
     monitor-service:
       build: ./monitor-service

@@ -49,6 +49,12 @@ services:
       container_name: taches-service
       depends_on:
         - pgdb
+
+    rabbitmq-service:
+      image: rabbitmq
+      ports:
+        - 5672:5672
+      container_name: rabbitmq-service
     
     pgdb:
       image: postgres
