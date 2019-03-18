@@ -21,7 +21,7 @@ Pour lancer les microservices il vous suffit d'ouvrir un terminal à la racine d
     <li>`docker exec personnes-service-mongodb mongo localhost:27017/mongodb /docker-entrypoint-initdb.d/init.js`</li>
 </ul>
 
-J'ai réalisé deux fichier docker-compose distinct pour une question de rapidité. Le fichier docker-compose-mini.yml ne contient que les services vitaux à l'application (taches-service, personnes-service, eureka-service, etc..). Le fichier docker-compose-full.yml lance les services du précédent fichier et lance les services de monitoring.
+J'ai réalisé deux fichiers docker-compose distinct pour une question de rapidité. Le fichier docker-compose-mini.yml ne contient que les services vitaux à l'application (taches-service, personnes-service, eureka-service, etc..). Le fichier docker-compose-full.yml lance les services du précédent fichier et lance les services de monitoring.
 
 {{% notice tip %}}
 Les deux dernières commandes permettent d'executer des scripts de peuplement des différentes bases de données.

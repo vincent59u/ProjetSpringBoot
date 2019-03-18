@@ -10,7 +10,7 @@ Le microservice personnes-sevice a été écrit en java avec le framework Spring
 
 ## Objectifs
 
-Le but du personnes-service est de gérer différents profils utilisateurs et de mettre ces fiches à la disposition du taches-service qui permet d'associer une tache à différents utilisateurs (responsable et participant).
+Le but du personnes-service est de gérer différents profils utilisateurs et de mettre ces fiches à la disposition du taches-service qui permet d'associer une tâche à différents utilisateurs (responsable et participant).
 
 ## Entity
 

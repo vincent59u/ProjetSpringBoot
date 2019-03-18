@@ -6,7 +6,7 @@ alwaysopen : false
 
 ## Principes
 
-Zipkin est un système de traçage distribué qui permet de résoudre les problème de latence dans les architectures microservices. Ce service propose une timeline avec les temps d'execution pour chaque requête sur l'application.
+Zipkin est un système de traçage distribué qui permet de résoudre les problème de latence dans les architectures microservices. Ce service propose une timeline avec les temps d'exécution pour chaque requête sur l'application.
 
 {{% notice tip %}}
 Ce service contient uniquement le jar fourni lors de l'exemple en cours. Rien de supplémentaire n'a été ajouté mis à part la dockerisation.
@@ -14,7 +14,7 @@ Ce service contient uniquement le jar fourni lors de l'exemple en cours. Rien de
 
 ## Exemples
 
-On peut voir, sur cette capture d'écran, toutes les opérations effectuées avec leurs temps d'éxecution. Dans cet exemple, j'ai uniquement fait des requêtes sur l'ensemble des taches (GET /taches).
+On peut voir, sur cette capture d'écran, toutes les opérations effectuées avec leurs temps d'exécution. Dans cet exemple, j'ai uniquement fait des requêtes sur l'ensemble des taches (GET /taches).
 
 ![GET all taches](../images/zipkin/capture0.png)
 
