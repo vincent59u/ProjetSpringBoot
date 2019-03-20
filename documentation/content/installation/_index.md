@@ -10,7 +10,7 @@ Pour lancer tous les services de mon projet, il vous suffit d'avoir docker d'ins
 
 ## Téléchargement du code source
 
-Il faut tout d'abord télécharger le dossier nommé 'livraison' sur mon dépôt [GitHub](.). Ce dossier contient le fichier docker-compose.yml ainsi qu'un sous dossier contenant un dockerfile ainsi que le .jar pour chaque microservice de l'application.
+Il faut tout d'abord télécharger le dossier nommé 'livraison' sur mon dépôt [GitHub](.). Ce dossier contient les fichiers docker-compose-mini.yml et docker-compose-full.yml ainsi qu'un sous dossier contenant un dockerfile ainsi que le .jar pour chaque microservice de l'application.
 
 ## Lancement de tous les services
 
@@ -29,7 +29,7 @@ Les deux dernières commandes permettent d'executer des scripts de peuplement de
 
 ## Vérification
 
-Le lancement de tous les services peut prendre quelques minutes (environ 2-3 minutes sur ma machine). Pour vérifier que ceux-ci soiet bien lancés, vous pouvez regarder l'état des containers docker avec la commande `docker ps`. Vérifier ensuite que la liste des containers ci-contre soient UP (ici avec le fichier docker-compose-mini.yml).
+Le lancement de tous les services peut prendre quelques minutes (environ 2-3 minutes sur ma machine). Pour vérifier que ceux-ci soient bien lancés, vous pouvez regarder l'état des containers docker avec la commande `docker ps`. Vérifier ensuite que la liste des containers ci-contre soient UP (ici avec le fichier docker-compose-mini.yml).
 
 ![docker](../images/installation/capture0.png)
 

@@ -6,7 +6,7 @@ alwaysopen : false
 
 ## Technologies
 
-Le microservice personnes-sevice a été écrit en java avec le framework Spring Boot. La base de données est une base orientée 'documents' avec MongoDB. J'ai fais ce choix pour montrer qu'il est possible de faire communiquer des services entre eux même si ces derniers ont des technologies différentes. De plus, nous avions eu un cours sur MongoDB l'année passée en M1.
+Le microservice personnes-sevice a été écrit en java avec le framework Spring Boot. La base de données est une base orientée 'documents' avec MongoDB. J'ai fait ce choix pour montrer qu'il est possible de faire communiquer des services entre eux même si ces derniers ont des technologies différentes. De plus, nous avions eu un cours sur MongoDB l'année passée en M1.
 
 ## Objectifs
 
@@ -24,16 +24,16 @@ On peut voir, par exemple, l'annotation @Email qui permet de vérifier que la ch
 
 ## Boundary
 
-Comme vu en cours, j'ai préféré redéfinir les méthodes GET, POST, PUT et DELETE dans une classe PersonneRepresentation afin de maitrisé toutes les opérations. C'est dans cette classe que l'on utilise l'annotation @Valid (dans la signature des méthodes) qui permet de valider les données d'une personne en fonction des contraintes posées dans l'entity.
+Comme vu en cours, j'ai préféré redéfinir les méthodes GET, POST, PUT et DELETE dans une classe PersonneRepresentation afin de maitriser toutes les opérations. C'est dans cette classe que l'on utilise l'annotation @Valid (dans la signature des méthodes) qui permet de valider les données d'une personne en fonction des contraintes posées dans l'entity.
 
 ![annotation valide](../images/personnes-service/capture1.png)
 
-Pour tester ce système de validation fourni par Spring, nous essayons d'insérer un utilisateur avec une date de naissance dans le future.
+Pour tester ce système de validation fourni par Spring, nous essayons d'insérer un utilisateur avec une date de naissance dans le futur.
 
 ![post](../images/personnes-service/capture2.png?width=20pc)
 ![resultat](../images/personnes-service/capture3.png)
 
-On remarque donc que les annotations permettent une validation rapide des données afin de garantir leurs intégrité.
+On remarque donc que les annotations permettent une validation rapide des données afin de garantir leurs intégrités.
 
 ## Documentation
 
@@ -41,10 +41,10 @@ Une documentation générée par Swagger2 est disponible à l'adresse [localhost
 
 ![documentation](../images/personnes-service/capture4.png)
 
-Il est possible de personnaliser et ajouter d'avantage de contenu à la documentation. J'ai préféré me concentrer sur les autres aspects du projet.
+Il est possible de personnaliser et ajouter davantage de contenu à la documentation. J'ai préféré me concentrer sur les autres aspects du projet.
 
 ## Tests
 
-J'ai également réaliser des tests unitaires comme vu en cours afin de tester rapidement les différentes méthode de l'API.
+J'ai également réalisé des tests unitaires comme vu en cours afin de tester rapidement les différentes méthodes de l'API.
 
 ![tests unitaire](../images/personnes-service/capture5.png)

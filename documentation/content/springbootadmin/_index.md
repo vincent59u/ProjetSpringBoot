@@ -10,7 +10,7 @@ Spring-boot-admin est un dashboard assez graphique qui permet de monitorer l'ens
 
 ## Exemples
 
-Pour cet exemple, j'ai volontairement stopper le monitor-service afin de créer des erreurs dans taches-service et personnes-service.
+Pour cet exemple, j'ai volontairement stoppé le monitor-service afin de créer des erreurs dans taches-service et personnes-service.
 
 ![dashboard](../images/spring-boot-admin-service/capture0.png)
 
